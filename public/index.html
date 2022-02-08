@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="icon" href="%PUBLIC_URL%/W-Favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta
@@ -23,7 +23,8 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+    <title>False3D Face Tracking Shader</title>
+	<script src="https://cdn.rawgit.com/greggman/twgl.js/master/dist/4.x/twgl-full.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -38,5 +39,41 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+	<!-- vertex shader -->
+	<script id="vs" type="f">
+		attribute vec2 position;
+		attribute vec2 texcoord;
+
+		uniform mat3 u_matrix;
+
+		varying vec2 v_texcoord;
+
+		void main() {
+			gl_Position = vec4(u_matrix * vec3(position, 1), 1);
+			v_texcoord = texcoord;
+		}
+	</script>
+
+	<!-- fragment shader -->
+	<script id="fs" type="f">
+		precision mediump float;
+
+		uniform vec2 u_mouse;
+
+		uniform sampler2D u_originalImage;
+		uniform sampler2D u_mapImage;
+
+		varying vec2 v_texcoord;
+
+		void main() {
+			vec4 depthDistortion = texture2D(u_mapImage, v_texcoord);
+			float parallaxMult = depthDistortion.r;
+
+			vec2 parallax = (u_mouse) * parallaxMult;
+
+			vec4 original = texture2D(u_originalImage, (v_texcoord + parallax));
+			gl_FragColor = original;
+		}
+	</script>
   </body>
 </html>
