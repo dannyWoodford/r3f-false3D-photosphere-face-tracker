@@ -6,7 +6,7 @@ import { OrbitControls, useDetectGPU } from '@react-three/drei'
 
 import loadedMessageHandler  from '../helpers/loadedMessageHandler.js'
 import FaceMeshMaterial  from '../helpers/FaceMeshMaterial.js'
-
+// test
 
 const twgl = window.twgl
 
